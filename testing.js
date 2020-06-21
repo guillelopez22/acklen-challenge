@@ -24,11 +24,7 @@ async function parkingCalculatorTests() {
         });
     });
 
-    // select dates
-    await driver.findElements(By.css("img[alt='Pick a date']")).then(async function(buttonArray) {
-        console.log(buttonArray.length);
-        
-    })
+    
 
 
 
