@@ -19,12 +19,16 @@ async function parkingCalculatorTests() {
             for (let index = 0; index < optionArray.length; index++) {
                 await optionArray[index].getAttribute('value').then(function(value) {
                     options.push(value)
-                })
+                });
             }
-        })
-    })
+        });
+    });
 
-    await driver.findElement(By.css("img[alt='Pick a date']")).click();
+    // select dates
+    await driver.findElements(By.css("img[alt='Pick a date']")).then(async function(buttonArray) {
+        console.log(buttonArray.length);
+        
+    })
 
 
 
