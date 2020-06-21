@@ -23,7 +23,13 @@ async function parkingCalculatorTests() {
             }
         })
     })
-    console.log(options);
+
+    await driver.findElement(By.css("img[alt='Pick a date']")).click();
+
+
+
+
+
     
 
     driver.quit();
