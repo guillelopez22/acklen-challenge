@@ -1,5 +1,5 @@
 // declarations
-const { Builder, by, Key, util} = require('selenium-webdriver');
+const { Builder, By, Key, util} = require('selenium-webdriver');
 
 async function testConnection() {
     // define browser driver
@@ -7,8 +7,16 @@ async function testConnection() {
     await driver.get('http://www.shino.de/parkcalc/');
     await driver.getTitle().then(function(title) {
         console.log(title);
-        driver.quit();
+        console.log('Successful connection to site');
     })
+
+    let parkingLot = await driver.findElement(By.css('#ParkingLot>option:nth-child(1)')).getAttribute('value').then(function(value) {
+        console.log(value);
+        
+    })
+    driver.quit();
 }
+
+
 
 testConnection()
