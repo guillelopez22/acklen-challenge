@@ -22,13 +22,13 @@ async function connectingToSite() {
         title = await driver.getTitle();
 
         
-        // await valetParkingTests();
-        // await shortTermParkingTests();
-        // await economyParkingTests();
-        // await longTermGarageParkingTests();
+        await valetParkingTests();
+        await shortTermParkingTests();
+        await economyParkingTests();
+        await longTermGarageParkingTests();
         await longTermSurfaceParkingTests();
         console.log('Tests executed successfully', title);
-        // driver.quit()
+        driver.quit();
     }).catch(error => {
         console.log(error);
     });
