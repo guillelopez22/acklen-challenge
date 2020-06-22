@@ -1,8 +1,10 @@
 // declarations
-const { Builder, By, Key, util } = require('selenium-webdriver');
+const { Builder, By } = require('selenium-webdriver');
 const assert = require('assert');
 let driver = new Builder().forBrowser('firefox').build();
+let moment = require('moment');
 
+const today = moment();
 let options = [];
 let startingDate;
 let startingTime;
@@ -12,6 +14,8 @@ let leavingTime;
 let leavingTimeAMPM;
 let cost;
 let parkingTime;
+
+
 async function connectingToSite() {
     await driver.get('http://www.shino.de/parkcalc/').then(async () => {
         title = await driver.getTitle();
@@ -30,29 +34,57 @@ async function connectingToSite() {
         // inputs
         startingDate = await driver.findElement(By.id('StartingDate'));
         startingTime = await driver.findElement(By.id('StartingTime'));
-        startingTimeAMPM = await driver.findElement(By.name('StartingTimeAMPM'));
+        startingTimeAMPM = await driver.findElements(By.name('StartingTimeAMPM'));
 
         leavingDate = await driver.findElement(By.id('LeavingDate'));
         leavingTime = await driver.findElement(By.id('LeavingTime'));
-        leavingTimeAMPM = await driver.findElement(By.name('LeavingTimeAMPM'));
-
-        
+        leavingTimeAMPM = await driver.findElements(By.name('LeavingTimeAMPM'));
+        cost = await driver.findElement(By.xpath("//td[@class='SubHead']//b")).getText();
         
         console.log('connected successfully to', title);
+
+        valetParkingCorrectDates();
     }).catch(error => {
         console.log(error);
     });
 }
 
-async function valetParking() {
+async function valetParkingCorrectDates() {
+    // 12 hours
+    await startingDate.click();
+    await startingDate.clear();
+    await startingDate.sendKeys('20/12/2020');
+
+    await startingTime.click();
+    await startingTime.clear();
+    await startingTime.sendKeys('11:00');
+    await startingTimeAMPM[0].click();
+
+    await leavingDate.click();
+    await leavingDate.clear();
+    await leavingDate.sendKeys('20/12/2020');
+
+    await leavingTime.click();
+    await leavingTime.clear();
+    await leavingTime.sendKeys('11:00');
+    await leavingTimeAMPM[1].click();
+
+
+
+    // await driver.findElement(By.id('StartingDate')).click();
+    // await driver.findElement(By.id('StartingDate')).clear();
+    // await driver.findElement(By.id('StartingDate')).sendKeys('20/12/2020');
+
+    // await driver.findElement(By.id('StartingTime')).click();
+    // await driver.findElement(By.id('StartingTime')).clear();
+    // await driver.findElement(By.id('StartingTime')).sendKeys('12:00');
+
 
 }
 
 
 
 // // valet parking testing
-// await driver.findElement(By.id('StartingDate')).click();
-// await driver.findElement(By.id('StartingDate')).clear();
-// await driver.findElement(By.id('StartingDate')).sendKeys('20/12/2020')
+
 
 connectingToSite();
