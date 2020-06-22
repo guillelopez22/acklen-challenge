@@ -13,6 +13,7 @@ let leavingDate;
 let leavingTime;
 let leavingTimeAMPM;
 let cost;
+let submit;
 let parkingTime;
 
 
@@ -23,33 +24,36 @@ async function connectingToSite() {
         // select options
         await driver.findElement(By.id('ParkingLot')).then(async function (element) {
             await element.findElements(By.tagName('option')).then(async function (optionArray) {
-                for (let index = 0; index < optionArray.length; index++) {
-                    await optionArray[index].getAttribute('value').then(function (value) {
-                        options.push(value)
-                    });
-                }
+                options = optionArray;
             });
         });
 
         // inputs
-        startingDate = await driver.findElement(By.id('StartingDate'));
-        startingTime = await driver.findElement(By.id('StartingTime'));
-        startingTimeAMPM = await driver.findElements(By.name('StartingTimeAMPM'));
-
-        leavingDate = await driver.findElement(By.id('LeavingDate'));
-        leavingTime = await driver.findElement(By.id('LeavingTime'));
-        leavingTimeAMPM = await driver.findElements(By.name('LeavingTimeAMPM'));
-        cost = await driver.findElement(By.xpath("//td[@class='SubHead']//b")).getText();
-        
+        getInputs().then(() => {
+            valetParkingCorrectDates();
+        })
         console.log('connected successfully to', title);
 
-        valetParkingCorrectDates();
     }).catch(error => {
         console.log(error);
     });
 }
 
+async function getInputs() {
+    startingDate = await driver.findElement(By.id('StartingDate'));
+    startingTime = await driver.findElement(By.id('StartingTime'));
+    startingTimeAMPM = await driver.findElements(By.name('StartingTimeAMPM'));
+
+    leavingDate = await driver.findElement(By.id('LeavingDate'));
+    leavingTime = await driver.findElement(By.id('LeavingTime'));
+    leavingTimeAMPM = await driver.findElements(By.name('LeavingTimeAMPM'));
+    cost = await driver.findElement(By.xpath("//td[@class='SubHead']//b")).getText();
+    submit = await driver.findElement(By.name('Submit'));
+
+}
+
 async function valetParkingCorrectDates() {
+    options[0].click();
     // 12 hours
     await startingDate.click();
     await startingDate.clear();
@@ -69,15 +73,31 @@ async function valetParkingCorrectDates() {
     await leavingTime.sendKeys('11:00');
     await leavingTimeAMPM[1].click();
 
+    await submit.click();
+    await driver.get('http://www.shino.de/parkcalc/').then(async function () {
+        getInputs().then(async function () {
+            // >=5 hours
+            await startingDate.click();
+            await startingDate.clear();
+            await startingDate.sendKeys('20/12/2020');
 
+            await startingTime.click();
+            await startingTime.clear();
+            await startingTime.sendKeys('11:00');
+            await startingTimeAMPM[0].click();
 
-    // await driver.findElement(By.id('StartingDate')).click();
-    // await driver.findElement(By.id('StartingDate')).clear();
-    // await driver.findElement(By.id('StartingDate')).sendKeys('20/12/2020');
+            await leavingDate.click();
+            await leavingDate.clear();
+            await leavingDate.sendKeys('20/12/2020');
 
-    // await driver.findElement(By.id('StartingTime')).click();
-    // await driver.findElement(By.id('StartingTime')).clear();
-    // await driver.findElement(By.id('StartingTime')).sendKeys('12:00');
+            await leavingTime.click();
+            await leavingTime.clear();
+            await leavingTime.sendKeys('4:00');
+            await leavingTimeAMPM[1].click();
+
+            await submit.click();
+        })
+    });
 
 
 }
